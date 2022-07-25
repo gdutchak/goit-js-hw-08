@@ -19,16 +19,21 @@ ref.form.addEventListener("input", throttle(e => {
 }, 500))
 
 ref.form.addEventListener("submit", evt => {
+    if (input.value === "" && message.value === "") {
+        console.log("Error");
+    }
     evt.preventDefault();
     localStorage.removeItem(DATA_KEY);
     ref.form.reset();
     console.log(dataForm);
+
 })
 
 function onFillForm() {
     const storage = JSON.parse(localStorage.getItem(DATA_KEY));
+
     if (storage) {
-        ref.input.value = storage.email
-        ref.textarea.value = storage.message
+        ref.input.value = storage.email || ""
+        ref.textarea.value = storage.message || ""
     }
 }

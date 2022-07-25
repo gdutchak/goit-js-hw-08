@@ -11,13 +11,7 @@ player.on('timeupdate', throttle(function (currentTime) {
 
 const timeRef = localStorage.getItem("videoplayer-current-time")
 
-player.setCurrentTime(timeRef).then(function () {
-}).catch(function (error) {
-    switch (error.name) {
-        case 'RangeError':
-            break;
+if (timeRef !== 0 && timeRef > 0) {
+    player.setCurrentTime(timeRef)
+}
 
-        default:
-            break;
-    }
-});
