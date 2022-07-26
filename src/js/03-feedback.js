@@ -1,39 +1,41 @@
 const throttle = require('lodash.throttle');
 const DATA_KEY = "feedback-form-state";
 
-const ref = {
+const refs = {
     form: document.querySelector(".feedback-form"),
     input: document.querySelector("input"),
     textarea: document.querySelector("textarea"),
     submit: document.querySelector("button"),
 }
 
+const formObj = {}
 onFillForm()
 
-const dataForm = {}
-
-ref.form.addEventListener("input", throttle(e => {
-    dataForm[e.target.name] = e.target.value
-    localStorage.setItem(DATA_KEY, JSON.stringify(dataForm))
-
+refs.form.addEventListener("input", throttle(e => {
+    formObj[e.target.name] = e.target.value;
+    localStorage.setItem(DATA_KEY, JSON.stringify(formObj));
 }, 500))
 
-ref.form.addEventListener("submit", evt => {
-    if (input.value === "" && message.value === "") {
-        console.log("Error");
+refs.form.addEventListener("submit", e => {
+    e.preventDefault();
+    if (refs.input.value !== "" && refs.textarea.value !== "") {
+        localStorage.clear(DATA_KEY);
+        console.log(formObj);
+        refs.form.reset();
+    } else {
+        alert("Fill all fields!");
     }
-    evt.preventDefault();
-    localStorage.removeItem(DATA_KEY);
-    ref.form.reset();
-    console.log(dataForm);
-
 })
 
 function onFillForm() {
-    const storage = JSON.parse(localStorage.getItem(DATA_KEY));
+    let storageEl = localStorage.getItem(DATA_KEY)
+    if (storageEl) {
+        storageEl = JSON.parse(storageEl)
+        Object.entries(storageEl).forEach(([name, value]) => {
+            refs.form.elements[name].value = value;
+            formObj[name] = value;
+        });
 
-    if (storage) {
-        ref.input.value = storage.email || ""
-        ref.textarea.value = storage.message || ""
     }
 }
+
